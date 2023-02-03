@@ -1,5 +1,5 @@
 const db = require("../models");
-const File = db.File;
+const file = db.file;
 const Op = db.Sequelize.Op;
 const utils = require("./utils");
 
@@ -20,7 +20,7 @@ exports.create = (req, res) => {
   };
 
   // Save File in the database
-  Files.create(File)
+  file.create(File)
     .then(data => {
       res.send(utils.success(data));
     })
@@ -31,25 +31,89 @@ exports.create = (req, res) => {
 
 // Retrieve all Files from the database.
 exports.findAll = (req, res) => {
-  
+    console.log("Get all files");
+    file.findAll()
+    .then(data => {
+      res.send(data);
+    })
+    .catch(err => {
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while retrieving files."
+      });
+    });
 };
 
 // Find a single File with an id
 exports.findOne = (req, res) => {
-  
+  console.log("Select id from files");
+  file.findOne({
+    where: {
+      id: req.params.id
+    }
+  })
+  .then(data => {
+    res.send(data);
+  })
+  .catch(err => {
+    res.status(500).send({
+      message:
+      err.message || "Some error occurred while retrieving one file."
+    })
+  })
 };
 
 // Update a File by the id in the request
 exports.update = (req, res) => {
-  
+  console.log("Update file");
+  file.update(req.body, {
+    where: {
+      id: req.params.id
+    }
+  })
+  .then(data => {
+    res.send(data);
+  })
+  .catch(err => {
+    res.status(500).send({
+      message:
+      err.message || "Some error occurred while updating file."
+    })
+  })
 };
 
 // Delete a File with the specified id in the request
 exports.delete = (req, res) => {
-  
+  console.log("Delete File with id");
+  file.destroy({
+    where: {
+      id: req.params.id
+    }
+  })
+    .then(data => {
+      res.send(data);
+    })
+    .catch(err => {
+      res.status(500).send({
+        message:
+        err.message || "Some error occurred while deleting file."
+      })
+  })
 };
 
 // Delete all Files from the database.
 exports.deleteAll = (req, res) => {
-  
+  console.log("Delete All Files");
+  file.destroy({
+    where: {}
+  })
+    .then(data => {
+      res.send(data);
+    })
+    .catch(err => {
+      res.status(500).send({
+        message:
+        err.message || "Some error occurred while deleting all Files."
+      })
+  })
 };

@@ -93,14 +93,14 @@ exports.delete = (req, res) => {
     .catch(err => {
       res.status(500).send({
         message:
-        err.message || "Some error occurred while updating company."
+        err.message || "Some error occurred while deleting company."
       })
   })
 };
 
 // Delete all Companies from the database.
 exports.deleteAll = (req, res) => {
-  console.log("Delete Company with id");
+  console.log("Delete Companies");
   company.destroy({
     where: {}
   })
@@ -110,7 +110,7 @@ exports.deleteAll = (req, res) => {
     .catch(err => {
       res.status(500).send({
         message:
-        err.message || "Some error occurred while updating company."
+        err.message || "Some error occurred while deleting all companies."
       })
   })
 };

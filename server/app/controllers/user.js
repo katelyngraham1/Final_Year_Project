@@ -1,5 +1,5 @@
 const db = require("../models");
-const User = db.User;
+const user = db.user;
 const Op = db.Sequelize.Op;
 const utils = require("./utils");
 
@@ -19,7 +19,7 @@ exports.create = (req, res) => {
   };
 
   // Save Users in the database
-  Users.create(User)
+  user.create(User)
     .then(data => {
       res.send(utils.success(data));
     })
@@ -30,25 +30,89 @@ exports.create = (req, res) => {
 
 // Retrieve all Users from the database.
 exports.findAll = (req, res) => {
-  
+  console.log("Get all users");
+    user.findAll()
+    .then(data => {
+      res.send(data);
+    })
+    .catch(err => {
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while retrieving users."
+      });
+    });
 };
 
 // Find a single Users with an id
 exports.findOne = (req, res) => {
-  
+  console.log("Select id from user");
+  user.findOne({
+    where: {
+      id: req.params.id
+    }
+  })
+  .then(data => {
+    res.send(data);
+  })
+  .catch(err => {
+    res.status(500).send({
+      message:
+      err.message || "Some error occurred while retrieving one user."
+    })
+  })
 };
 
 // Update a Users by the id in the request
 exports.update = (req, res) => {
-  
+  console.log("Update user");
+  user.update(req.body, {
+    where: {
+      id: req.params.id
+    }
+  })
+  .then(data => {
+    res.send(data);
+  })
+  .catch(err => {
+    res.status(500).send({
+      message:
+      err.message || "Some error occurred while updating user."
+    })
+  })
 };
 
 // Delete a Users with the specified id in the request
 exports.delete = (req, res) => {
-  
+  console.log("Delete Users with id");
+  user.destroy({
+    where: {
+      id: req.params.id
+    }
+  })
+    .then(data => {
+      res.send(data);
+    })
+    .catch(err => {
+      res.status(500).send({
+        message:
+        err.message || "Some error occurred while deleting user."
+      })
+  })
 };
 
 // Delete all Users from the database.
 exports.deleteAll = (req, res) => {
-  
+  console.log("Delete All Users");
+  user.destroy({
+    where: {}
+  })
+    .then(data => {
+      res.send(data);
+    })
+    .catch(err => {
+      res.status(500).send({
+        message:
+        err.message || "Some error occurred while deleting all users."
+      })
+  })
 };
