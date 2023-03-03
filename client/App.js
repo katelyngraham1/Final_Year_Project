@@ -1,23 +1,26 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import { Button } from "@react-native-material/core";
+import { createDrawerNavigator } from "@react-navigation/drawer";
+import { NavigationContainer } from "@react-navigation/native";
+
+import Home from './screens/Home';
+import Invoices from './screens/Invoice';
+import Companies from './screens/Company';
+import Folders from './screens/Folder';
+import Settings from './screens/Settings';
+import Logout from './screens/Logout';
+
+const Drawer = createDrawerNavigator();
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>HELLO!</Text>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-      < Button title="Click Me!" style={{ alignSelf:"center", marginTop: 40}}/>
-    </View>
+    <NavigationContainer>
+      <Drawer.Navigator initialRouteName="Home">
+        <Drawer.Screen name="Home" component={Home} />
+        <Drawer.Screen name="Invoices" component={Invoices} />
+        <Drawer.Screen name="Companies" component={Companies} />
+        <Drawer.Screen name="Folders" component={Folders} />
+        <Drawer.Screen name="Settings" component={Settings} />
+        <Drawer.Screen name="Log Out" component={Logout} />
+      </Drawer.Navigator>
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
