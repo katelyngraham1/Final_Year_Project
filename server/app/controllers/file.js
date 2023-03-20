@@ -32,7 +32,11 @@ exports.create = (req, res) => {
 // Retrieve all Files from the database.
 exports.findAll = (req, res) => {
     console.log("Get all files");
-    file.findAll()
+    file.findAll({
+      where: {
+        userid: req.query.userid
+      }
+    })
     .then(data => {
       res.send(data);
     })

@@ -3,9 +3,35 @@ const user = db.user;
 const Op = db.Sequelize.Op;
 const utils = require("./utils");
 
+exports.login = (req, res) => {
+  // Validate request
+  console.log("Login called");
+  if ( !req.body.email || !req.body.password) {
+    res.status(401).send(utils.error("Please Provide an email and password to login!"));
+    return;
+  }
+
+  const userlogin =  user.findOne({
+    where: {
+      email: req.body.email,
+      password: req.body.password
+    }
+  }).then(data => {
+    if(!data) {
+      return res.status(401).send(utils.error("Invalid email or password provided, please try again!"));
+    }
+    res.send(utils.success({ id: data.id} ));
+  })
+  .catch(err => {
+    res.status(500).send(utils.error("Error while logging in: " + err.message));
+  });
+
+};
+
 // Create and Save a new Users
 exports.create = (req, res) => {
   // Validate request
+  console.log("Register called");
   if (!req.body.name || !req.body.email || !req.body.password) {
     res.status(400).send(utils.error("Missing data in request!"));
     return;
