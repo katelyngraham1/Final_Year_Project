@@ -1,43 +1,74 @@
-import { createDrawerNavigator } from "@react-navigation/drawer";
-import { NavigationContainer } from "@react-navigation/native";
-import { Image } from 'react-native';
-import { AntDesign } from "@expo/vector-icons";
+import 'react-native-gesture-handler';
 
-import Home from './screens/Home';
-import Invoices from './screens/Invoice';
-import Companies from './screens/Company';
-import Folders from './screens/Folder';
-import Settings from './screens/Settings';
-import Logout from './screens/Logout';
+// Import React and Component
+import React from 'react';
 
-const Drawer = createDrawerNavigator();
+// Import Navigators from React Navigation
+import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
 
-export default function App() {
+// Import Screens
+import SplashScreen from './Screen/SplashScreen';
+import LoginScreen from './Screen/LoginScreen';
+import RegisterScreen from './Screen/RegisterScreen';
+import DrawerNavigationRoutes from './Screen/DrawerNavigationRoutes';
+
+const Stack = createStackNavigator();
+
+const Auth = () => {
+  // Stack Navigator for Login and Sign up Screen
+  return (
+    <Stack.Navigator initialRouteName="LoginScreen">
+      <Stack.Screen
+        name="LoginScreen"
+        component={LoginScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="RegisterScreen"
+        component={RegisterScreen}
+        options={{
+          title: 'Register', //Set Header Title
+          headerStyle: {
+            backgroundColor: '#c381e4', //Set Header color Register Screen
+          },
+          headerTintColor: '#fff', //Set Header text color
+          headerTitleStyle: {
+            fontWeight: 'bold', //Set Header text style
+          },
+        }}
+      />
+    </Stack.Navigator>
+  );
+};
+
+const App = () => {
   return (
     <NavigationContainer>
-      <Drawer.Navigator initialRouteName="Home" screenOptions={{ 
-         headerShown: true,
-         headerTitle: 'File A While',
-         headerTitleStyle: { color: '#FF5733', fontSize: 30 },
-         headerRight: () => (
-          <Image
-            source={require('./assets/FileLogo.png')} 
-            style={{ width: 30, height: 30, marginRight: 15, borderRadius: 5 }} 
-          />
-        ),
-        headerTintColor: "#8626BC",
-        drawerStyle: { backgroundColor: "#C2C0C4" },
-        drawerActiveTintColor: "#8626BC",
-        drawerInactiveTintColor: "#FF5733",
-        
-      }}>
-      <Drawer.Screen name="Home" component={Home} />
-      <Drawer.Screen name="Invoices" component={Invoices} />
-      <Drawer.Screen name="Companies" component={Companies} />
-      <Drawer.Screen name="Folders" component={Folders} />
-      <Drawer.Screen name="Settings" component={Settings} />
-      <Drawer.Screen name="Log Out" component={Logout} />
-    </Drawer.Navigator>
-  </NavigationContainer>
+      <Stack.Navigator initialRouteName="SplashScreen">
+        {/* SplashScreen which will come once for 5 Seconds */}
+        <Stack.Screen
+          name="SplashScreen"
+          component={SplashScreen}
+          // Hiding header for Splash Screen
+          options={{headerShown: false}}
+        />
+        {/* Auth Navigator: Include Login and Signup */}
+        <Stack.Screen
+          name="Auth"
+          component={Auth}
+          options={{headerShown: false}}
+        />
+        {/* Navigation Drawer as a landing page */}
+        <Stack.Screen
+          name="DrawerNavigationRoutes"
+          component={DrawerNavigationRoutes}
+          // Hiding header for Navigation Drawer
+          options={{headerShown: false}}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
-}
+};
+
+export default App;
