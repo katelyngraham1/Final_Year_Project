@@ -12,15 +12,16 @@ exports.create = (req, res) => {
   }
 
   // Create a File
-  const File = {
-    name: req.body.name,
-    paid: req.body.paid,
-    amount: req.body.amount,
-    filetype: req.body.filetype
-  };
+  // const File = {
+  //   name: req.body.name,
+  //   paid: req.body.paid,
+  //   amount: req.body.amount,
+  //   filetype: req.body.filetype,
+  //   userid
+  // };
 
   // Save File in the database
-  file.create(File)
+  file.create(req.body)
     .then(data => {
       res.send(utils.success(data));
     })
@@ -31,7 +32,7 @@ exports.create = (req, res) => {
 
 // Retrieve all Files from the database.
 exports.findAll = (req, res) => {
-    console.log("Get all files");
+    console.log("Get all files", req.query.userid);
     file.findAll({
       where: {
         userid: req.query.userid

@@ -20,6 +20,7 @@ exports.login = (req, res) => {
     if(!data) {
       return res.status(401).send(utils.error("Invalid email or password provided, please try again!"));
     }
+    console.log("Returning id ", data.id);
     res.send(utils.success({ id: data.id} ));
   })
   .catch(err => {
