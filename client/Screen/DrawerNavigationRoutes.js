@@ -68,7 +68,7 @@ const DrawerNavigatorRoutes = (props) => {
   return (
     <Drawer.Navigator
       drawerContentOptions={{
-        activeTintColor: '#00ff00',
+        activeTintColor: '#ff4613',
         color: '#c381e4',
         itemStyle: {marginVertical: 5, color: 'white'},
         labelStyle: {
