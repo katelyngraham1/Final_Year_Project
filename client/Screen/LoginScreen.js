@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
 } from 'react-native';
+import { API_ROOT } from '../constants';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -43,7 +44,7 @@ const LoginScreen = ({navigation}) => {
     }
     formBody = formBody.join('&');
 
-    fetch('http://DESKTOP-M09QP2T:8080/api/user/login', {
+    fetch(API_ROOT + '/api/user/login', {
       method: 'POST',
       body: formBody,
       headers: {

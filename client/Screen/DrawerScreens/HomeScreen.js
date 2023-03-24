@@ -4,6 +4,7 @@ import { View, Text, FlatList, TouchableOpacity,
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Moment from 'moment';
 import { Button } from 'react-native-paper';
+import { API_ROOT, getHeaders } from '../../constants';
 
 const HomeScreen = ({ navigation }) => {
   const [fileData, setFileData] = useState([]);
@@ -12,7 +13,8 @@ const HomeScreen = ({ navigation }) => {
   useEffect(async () => {
     const userid =  await AsyncStorage.getItem('user_id');
     console.log("Home Screen Loading", userid);
-    fetch(`http://DESKTOP-M09QP2T:8080/api/file?userid=${userid}`)
+    // fetch(API_ROOT + `/api/file?userid=${userid}`, { headers: getHeaders()})
+    fetch(API_ROOT + `/api/file`, { headers: await getHeaders()})
       .then(response => response.json())
       .then(data => {
         let sortedData = data
