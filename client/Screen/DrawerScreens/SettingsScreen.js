@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View, TextInput, Button } from "react-native";
+import { StyleSheet, Text, View, TextInput, Button, Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { API_ROOT, getHeaders } from "../../constants";
 
@@ -11,11 +11,21 @@ export default function Settings() {
 
   const handleChangePassword = async () => {
     const userId = await AsyncStorage.getItem("user_id");
-    if (newPassword !== confirmPassword) {
-      setMessage("New password and confirm password do not match");
+    if (newPassword == "") { setMessage("No new password entered!"); 
+    return;
+    }
+    if (currentPassword == "") { setMessage("You did not enter the old password!"); 
+    return;
+    }
+    if (newPassword.length < 6) {
+      setMessage("New password must be at least 6 characters long!");
       return;
     }
-    let dataToSend = {newpassword: confirmPassword};
+    if (newPassword !== confirmPassword) {
+      setMessage("New password and confirm password do not match!");
+      return;
+    }
+    let dataToSend = {newpassword: confirmPassword, currentpassword: currentPassword};
     let formBody = [];
     for (let key in dataToSend) {
       let encodedKey = encodeURIComponent(key);
@@ -31,10 +41,12 @@ export default function Settings() {
     })
       .then((response) => response.json())
       .then((data) => {
-        if (data.success) {
+        console.log("Change password returned with", data)
+        if (!data.error) {
           setMessage("Password change successful");
+
         } else {
-          setMessage(data.error);
+          setMessage(data.message);
         }
       })
       .catch((error) => console.error(error));
@@ -42,30 +54,56 @@ export default function Settings() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Change Password</Text>
+      <Text style={styles.header}>Current Password</Text>
       <TextInput
         style={styles.input}
         secureTextEntry={true}
         placeholder="Current Password"
         value={currentPassword}
         onChangeText={(text) => setCurrentPassword(text)}
-      />
+      /> 
+      <TextInput
+      style={styles.input}
+      secureTextEntry={true}
+      placeholder="New Password"
+      value={newPassword}
+      onChangeText={(text) => setNewPassword(text)}
+    />
       <TextInput
         style={styles.input}
         secureTextEntry={true}
-        placeholder="New Password"
-        value={newPassword}
-        onChangeText={(text) => setNewPassword(text)}
-      />
-      <TextInput
-        style={styles.input}
-        secureTextEntry={true}
-        placeholder="Confirm Password"
+        placeholder="Confirm New Password"
         value={confirmPassword}
         onChangeText={(text) => setConfirmPassword(text)}
       />
-      <Button title="Save" onPress={handleChangePassword} />
-      <Text style={styles.message}>{message}</Text>
+      <Button title="Save"  style={styles.buttonStyle}
+      color="#ff4613"
+      onPress={() => {
+        Alert.alert(
+          'Change Password',
+          'Are you sure you want to change password?',
+          [
+            {
+              text: 'No',
+              onPress: () => {
+                return null;
+              },
+            },
+            {
+              text: 'Yes',
+              onPress: () => {
+                handleChangePassword()
+              },
+            },
+          ],
+          {cancelable: false},
+        );
+      }}
+      
+      />
+      <Text style={[styles.message, message === "Password change successful" ? styles.successMessage : null]}>
+  {message}
+</Text>   
     </View>
   );
 }
@@ -92,7 +130,23 @@ const styles = StyleSheet.create({
   },
   message: {
     marginTop: 20,
-    color: "green",
     fontWeight: "bold",
+    color: "red",
+  },
+  successMessage: {
+    color: "green",
+  },
+  buttonStyle: {
+    backgroundColor: '#ff4613',
+    borderWidth: 0,
+    color: '#ff4613',
+    borderColor: '#ff4613',
+    height: 40,
+    alignItems: 'center',
+    borderRadius: 30,
+    marginLeft: 35,
+    marginRight: 35,
+    marginTop: 20,
+    marginBottom: 25,
   },
 });

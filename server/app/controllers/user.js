@@ -42,23 +42,24 @@ exports.changePassword = async (req, res) => {
   try {
     // Validate request
     console.log("Change password called", req.body);
-    if (!req.body.newpassword) {
+    if (!req.body.newpassword || !req.body.currentpassword) {
       res
         .status(401)
-        .send(utils.error("Please Provide an email and password to login!"));
+        .send(utils.error("Please Provide your current password and a new password to login!"));
       return;
     }
 
     console.log("Fetching user", req.headers);
     const userdetails = await user.findOne({
       where: {
-        id: req.headers.userid
+        id: req.headers.userid,
+        password: req.body.currentpassword
       }
     });
     if (!userdetails) {
       return res
         .status(500)
-        .send(utils.error("Error while logging in: " + err.message));
+        .send(utils.error("Invalid current password please try again "));
     }
 
     console.log("Updating user");
@@ -73,9 +74,10 @@ exports.changePassword = async (req, res) => {
       }
     );
 
-    console.log("User updated")
-    return res.send(utils.success({ id: data.id }));
+    console.log("User updated - returning");
+    return res.status(200).send(utils.success("Success"));
   } catch (error) {
+    console.error("Error", error.stack);
     return res.status(401).send(utils.error(error));
   }
  
