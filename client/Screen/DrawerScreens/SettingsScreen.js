@@ -1,54 +1,71 @@
 import React, { useState } from "react";
-import { Button, StatusBar, StyleSheet, Text, TextInput, View } from "react-native";
+import { StyleSheet, Text, View, TextInput, Button } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { API_ROOT, getHeaders } from "../../constants";
 
 export default function Settings() {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [passwordChanged, setPasswordChanged] = useState(false);
+  const [message, setMessage] = useState("");
 
-  const handleChangePassword = () => {
-    // Check if the current password is correct
-    // Check if the new password and confirm password match
-    // If everything is valid, change the password
-    // Otherwise, show an error message
-    if (currentPassword === "1234" && newPassword === confirmPassword) {
-      setPasswordChanged(true);
-      setCurrentPassword("");
-      setNewPassword("");
-      setConfirmPassword("");
-    } else {
-      alert("Incorrect current password or new password doesn't match confirm password");
+  const handleChangePassword = async () => {
+    const userId = await AsyncStorage.getItem("user_id");
+    if (newPassword !== confirmPassword) {
+      setMessage("New password and confirm password do not match");
+      return;
     }
+    let dataToSend = {newpassword: confirmPassword};
+    let formBody = [];
+    for (let key in dataToSend) {
+      let encodedKey = encodeURIComponent(key);
+      let encodedValue = encodeURIComponent(dataToSend[key]);
+      formBody.push(encodedKey + '=' + encodedValue);
+    }
+    formBody = formBody.join('&');
+    const headers = await getHeaders();
+    fetch(API_ROOT + '/api/user/changePassword', {
+      method: 'POST',
+      body: formBody,
+      headers: headers
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          setMessage("Password change successful");
+        } else {
+          setMessage(data.error);
+        }
+      })
+      .catch((error) => console.error(error));
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Change Password</Text>
+      <Text style={styles.header}>Change Password</Text>
       <TextInput
         style={styles.input}
+        secureTextEntry={true}
         placeholder="Current Password"
         value={currentPassword}
         onChangeText={(text) => setCurrentPassword(text)}
-        secureTextEntry={true}
       />
       <TextInput
         style={styles.input}
+        secureTextEntry={true}
         placeholder="New Password"
         value={newPassword}
         onChangeText={(text) => setNewPassword(text)}
-        secureTextEntry={true}
       />
       <TextInput
         style={styles.input}
+        secureTextEntry={true}
         placeholder="Confirm Password"
         value={confirmPassword}
         onChangeText={(text) => setConfirmPassword(text)}
-        secureTextEntry={true}
       />
-      <Button title="Change Password" onPress={handleChangePassword} />
-      {passwordChanged && <Text style={styles.message}>Password change successful</Text>}
-      <StatusBar style="auto" />
+      <Button title="Save" onPress={handleChangePassword} />
+      <Text style={styles.message}>{message}</Text>
     </View>
   );
 }
@@ -60,21 +77,22 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  title: {
-    fontSize: 24,
+  header: {
+    fontSize: 30,
     fontWeight: "bold",
-    marginBottom: 16,
+    marginBottom: 30,
   },
   input: {
-    height: 40,
-    width: "80%",
     borderWidth: 1,
-    borderRadius: 8,
-    paddingHorizontal: 16,
-    marginVertical: 8,
+    borderColor: "gray",
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 20,
+    width: "80%",
   },
   message: {
+    marginTop: 20,
     color: "green",
-    marginTop: 16,
+    fontWeight: "bold",
   },
 });

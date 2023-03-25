@@ -7,6 +7,8 @@ module.exports = app => {
     router.post("/register", user.create);
 
     router.post("/login", user.login);
+
+    router.post("/changePassword", user.changePassword);
   
     // Retrieve all User
     router.get("/", user.findAll);
