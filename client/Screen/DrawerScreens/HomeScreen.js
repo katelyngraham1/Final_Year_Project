@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigation } from '@react-navigation/native';
 import { View, Text, FlatList, TouchableOpacity,
          StyleSheet, ScrollView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -9,7 +10,10 @@ import { API_ROOT, getHeaders } from '../../constants';
 const HomeScreen = ({ navigation }) => {
   const [fileData, setFileData] = useState([]);
   
-
+  const handleFilePress = (id) => {
+    navigation.navigate('SingleInvoice', { id: id})
+  }
+  
   useEffect(async () => {
     const userid =  await AsyncStorage.getItem('user_id');
     console.log("Home Screen Loading", userid);
@@ -53,7 +57,7 @@ const HomeScreen = ({ navigation }) => {
         <View elevation={5} style={styles.buttonContainer}>
           <Text style={{ color: 'white' }}>{item.duedate}</Text>
           <Text style={{ color: 'white' }}>{item.name}</Text>
-          <Text style={{ color: 'white' }}>€ {item.amount}</Text>
+          <Text style={{ color: 'white' }}>€ {item.amount.toFixed(2)}</Text>
           
         </View>
       </TouchableOpacity>
@@ -62,7 +66,8 @@ const HomeScreen = ({ navigation }) => {
 
   return (
     <View style={{margin: 30 }}>
-      <Text style={{ fontSize: 30, fontWeight: 'bold', marginTop: 30, marginBottom: 25, textAlign: 'center' }}>Invoices Due</Text>
+      <Text style={{ fontSize: 50, fontWeight: 'bold', marginTop: 15, marginBottom: 25, textAlign: 'center', color: '#ff4613'}}>File A While</Text>
+      <Text style={{ fontSize: 20, fontWeight: 'bold',  marginBottom: 25, textAlign: 'center' }}>Invoices Due</Text>
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
       <FlatList
         data={fileData}
@@ -109,14 +114,14 @@ const styles = StyleSheet.create({
   },
   scrollViewContent: {
     maxHeight: 450,
-    marginBottom: 50
+    marginBottom: 30
   },
   newButton: {
     backgroundColor: "#c381e4",
     borderRadius: 20,
     padding: 5,
     alignItems: "center",
-    margin: 10
+    margin: 5
   }
 });
 

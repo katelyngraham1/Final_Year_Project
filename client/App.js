@@ -12,6 +12,7 @@ import SplashScreen from './Screen/SplashScreen';
 import LoginScreen from './Screen/LoginScreen';
 import RegisterScreen from './Screen/RegisterScreen';
 import DrawerNavigationRoutes from './Screen/DrawerNavigationRoutes';
+import SingleInvoice from './Screen/SingleInvoice';
 
 const Stack = createStackNavigator();
 
@@ -65,6 +66,19 @@ const App = () => {
           component={DrawerNavigationRoutes}
           // Hiding header for Navigation Drawer
           options={{headerShown: false}}
+        />
+         <Stack.Screen
+          name="SingleInvoice"
+          component={SingleInvoice}
+          options={{headerShown: true,
+            headerStyle: {
+              backgroundColor: '#c381e4', //Set Header color Register Screen
+            },
+            headerTintColor: '#fff', //Set Header text color
+            headerTitleStyle: {
+              fontWeight: 'bold', //Set Header text style
+            },}}
+          
         />
       </Stack.Navigator>
     </NavigationContainer>
