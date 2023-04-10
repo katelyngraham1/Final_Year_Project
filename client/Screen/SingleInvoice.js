@@ -4,6 +4,7 @@ import { StyleSheet, Text, View } from "react-native";
 import Loader from './Components/Loader';
 import { API_ROOT, getHeaders } from '../constants';
 import { ScrollView } from 'react-native-gesture-handler';
+//import ToggleSwitch from 'toggle-switch-react-native'
 import Moment from 'moment';
 
 export default function SingleInvoice({route, navigation}) {
@@ -41,16 +42,20 @@ export default function SingleInvoice({route, navigation}) {
         <Text style={{ fontSize: 20, marginBottom: 10 }}>{file.name}</Text>
       </View>
       <View style={styles.rowContainer}>
-      <View style={styles.amountContainer}>
-        <Text style={{color: 'grey'}}>Amount:</Text>
-        <Text style={{ fontSize: 20, marginBottom: 10}}>€ {file.amount.toFixed(2)}</Text>
-      </View> 
-      <View style={styles.dateContainer}>
-        <Text style={{color: 'grey'}}>Due Date: </Text>
-        <Text style={{ fontSize: 20, marginBottom: 10}}>
-          {Moment(file.duedate).format('Do MMM YY')}
-        </Text>
-      </View></View>
+        <View style={styles.amountContainer}>
+          <Text style={{color: 'grey'}}>Amount:</Text>
+          <Text style={{ fontSize: 20, marginBottom: 10}}>€ {file.amount.toFixed(2)}</Text>
+        </View> 
+        <View style={styles.dateContainer}>
+          <Text style={{color: 'grey'}}>Due Date: </Text>
+          <Text style={{ fontSize: 20, marginBottom: 10}}>
+            {Moment(file.duedate).format('Do MMM YY')}
+          </Text>
+        </View>
+      </View>
+      <View>
+      
+      </View>
     </View>
   );
 };
@@ -58,10 +63,10 @@ export default function SingleInvoice({route, navigation}) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#ebd5f6',
+        backgroundColor: '#bfbfbf',
         alignItems: 'center',
-        justifyContent: 'center',
-        margin: 40
+        justifyContent: 'top',
+        margin: 45
     },
     scrollViewContent: {
       maxHeight: 450,
