@@ -14,6 +14,8 @@ import RegisterScreen from './Screen/RegisterScreen';
 import DrawerNavigationRoutes from './Screen/DrawerNavigationRoutes';
 import SingleInvoice from './Screen/SingleInvoice';
 import AllInvoices from './Screen/AllInvoices';
+import AddNewInvoice from './Screen/AddNewInvoice';
+
 
 
 const Stack = createStackNavigator();
@@ -93,6 +95,7 @@ const App = () => {
               fontWeight: 'bold',
             },}}
         />
+        
       </Stack.Navigator>
     </NavigationContainer>
   );

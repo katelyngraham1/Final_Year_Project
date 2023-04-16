@@ -6,9 +6,12 @@ import { API_ROOT, getHeaders } from '../constants';
 import { ScrollView } from 'react-native-gesture-handler';
 //import ToggleSwitch from 'toggle-switch-react-native'
 import Moment from 'moment';
+import { Alert } from 'react-native';
+
 
 export default function SingleInvoice({route, navigation}) {
   const [file, setFile] = useState();
+  const [isEnabled, setIsEnabled] = useState(false);
 
   useEffect(async () => {
     // const userid =  await AsyncStorage.getItem('user_id');
@@ -19,17 +22,57 @@ export default function SingleInvoice({route, navigation}) {
       .then(data => {
         console.log(data);
         setFile(data);
+        setIsPaid(data.paid);
       })
       .catch(error => console.error(error));
   }, [route.params.id]);
+
+  const handleToggle = () => {
+    Alert.alert(
+      'Confirm',
+      'Are you sure this is Paid?',
+      [
+        {
+          text: 'No',
+          onPress: () => setIsEnabled(!isEnabled),
+          style: 'cancel'
+        },
+        {
+          text: 'Yes, it is Paid',
+          onPress: () => {markInvoice();}
+        }
+      ]
+    )
+  }
+  
+  const markInvoice = () => {
+    fetch(API_ROOT + '/api/file/'+route.params.id+'/paid', {
+      method: 'POST',
+      headers: {
+        //Header Defination
+        'Content-Type':
+        'application/x-www-form-urlencoded;charset=UTF-8',
+      },
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+       
+        console.log(responseJson);
+        setIsEnabled(true);
+       
+      })
+      .catch((error) => {
+        //Hide Loader
+        console.error(error);
+      });
+  }
+
 
   if(!file) {
     return (
       <Loader loading={true} />
     )
   }
-
-
 
   return (
     <View style={styles.container}>
@@ -52,8 +95,23 @@ export default function SingleInvoice({route, navigation}) {
             {Moment(file.duedate).format('Do MMM YY')}
           </Text>
         </View>
+        
       </View>
-      
+        {isEnabled === false &&
+          <View style={styles.toggleContainer}>
+          <Text>Unpaid</Text>
+          <Switch
+            trackColor={{false: '#ff0000', true: '#68C151'}}
+            thumbColor={isEnabled ? '#f4f3f4' : '#f4f3f4'}
+            ios_backgroundColor="#ff0000"
+            onValueChange={handleToggle}
+            value={isEnabled}
+          />
+        </View> 
+         }
+        {isEnabled === true && 
+          <Text style={styles.paidText}>Paid</Text>
+        }
     </View>
   );
 };
@@ -117,5 +175,9 @@ const styles = StyleSheet.create({
     toggleContainer: {
       borderRadius: 10,
       padding: 10,
+    },
+    toggleContainer: {
+      justifyContent: 'flex-start',
+      alignItems: 'flex-start'
     }
 })

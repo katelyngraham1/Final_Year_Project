@@ -12,6 +12,9 @@ module.exports = app => {
     // Retrieve a single File with id
     router.get("/:id", file.findOne);
   
+    // Retrieve a single File with id
+    router.post("/:id/paid", file.paid);
+  
     // Update a File with id
     router.put("/:id", file.update);
   

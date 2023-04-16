@@ -87,6 +87,26 @@ exports.update = (req, res) => {
   })
 };
 
+// Update a File by the id in the request
+exports.paid = (req, res) => {
+  console.log("File paid");
+  file.update({
+    paid: true
+  }, {
+    where: {
+      id: req.params.id
+    }
+  })
+  .then(data => {
+    res.send(data);
+  })
+  .catch(err => {
+    res.status(500).send({
+      message:
+      err.message || "Some error occurred while updating file."
+    })
+  })
+};
 // Delete a File with the specified id in the request
 exports.delete = (req, res) => {
   console.log("Delete File with id");
