@@ -13,6 +13,8 @@ import LoginScreen from './Screen/LoginScreen';
 import RegisterScreen from './Screen/RegisterScreen';
 import DrawerNavigationRoutes from './Screen/DrawerNavigationRoutes';
 import SingleInvoice from './Screen/SingleInvoice';
+import AllInvoices from './Screen/AllInvoices';
+
 
 const Stack = createStackNavigator();
 
@@ -78,7 +80,18 @@ const App = () => {
             headerTitleStyle: {
               fontWeight: 'bold', //Set Header text style
             },}}
-          
+        />
+        <Stack.Screen
+          name="AllInvoices"
+          component={AllInvoices}
+          options={{headerShown: true,
+            headerStyle: {
+              backgroundColor: '#c381e4', 
+            },
+            headerTintColor: '#fff', 
+            headerTitleStyle: {
+              fontWeight: 'bold',
+            },}}
         />
       </Stack.Navigator>
     </NavigationContainer>

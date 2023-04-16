@@ -5,7 +5,7 @@ import { View, Text, FlatList, TouchableOpacity,
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Moment from 'moment';
 import { Button } from 'react-native-paper';
-import { API_ROOT, getHeaders } from '../../constants';
+import { API_ROOT, getHeaders } from '../constants';
 
 const HomeScreen = ({ navigation }) => {
   const [fileData, setFileData] = useState([]);
@@ -22,7 +22,7 @@ const HomeScreen = ({ navigation }) => {
       .then(response => response.json())
       .then(data => {
         let sortedData = data
-          .filter(item => !item.paid || item.paid === "0") // filter out items where paid is true or 1
+          //.filter(item => !item.paid || item.paid === "0") // filter out items where paid is true or 1
           .sort((a, b) => {
             const dueDateA = new Date(a.duedate);
             const dueDateB = new Date(b.duedate);
@@ -67,7 +67,7 @@ const HomeScreen = ({ navigation }) => {
   return (
     <View style={{margin: 30 }}>
       <Text style={{ fontSize: 50, fontWeight: 'bold', marginTop: 15, marginBottom: 25, textAlign: 'center', color: '#ff4613'}}>File A While</Text>
-      <Text style={{ fontSize: 20, fontWeight: 'bold',  marginBottom: 25, textAlign: 'center' }}>Invoices Due</Text>
+      <Text style={{ fontSize: 20, fontWeight: 'bold',  marginBottom: 25, textAlign: 'center' }}>All Invoices</Text>
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
       <FlatList
         data={fileData}
@@ -78,10 +78,6 @@ const HomeScreen = ({ navigation }) => {
       <Button style={styles.newButton}  mode="contained" 
               onPress={() => navigation.navigate('NewInvoice')}>
         Add New Invoice
-      </Button>
-      <Button style={styles.newButton}  mode="contained" 
-              onPress={() => navigation.navigate('AllInvoices')}>
-        View All Invoices
       </Button>
     </View>
   );
@@ -113,7 +109,7 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   scrollViewContent: {
-    maxHeight: 450,
+    maxHeight: 500,
     marginBottom: 30
   },
   newButton: {

@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, Switch } from "react-native";
 import Loader from './Components/Loader';
 import { API_ROOT, getHeaders } from '../constants';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -53,9 +53,7 @@ export default function SingleInvoice({route, navigation}) {
           </Text>
         </View>
       </View>
-      <View>
       
-      </View>
     </View>
   );
 };
@@ -115,5 +113,9 @@ const styles = StyleSheet.create({
         width: 0,
         height: 3
       }
+    },
+    toggleContainer: {
+      borderRadius: 10,
+      padding: 10,
     }
 })
