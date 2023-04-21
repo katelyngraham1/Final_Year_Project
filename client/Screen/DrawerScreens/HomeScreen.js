@@ -7,14 +7,16 @@ import Moment from 'moment';
 import { Button } from 'react-native-paper';
 import { API_ROOT, getHeaders } from '../../constants';
 
-const HomeScreen = ({ navigation }) => {
+const HomeScreen = ({ navigation, route }) => {
   const [fileData, setFileData] = useState([]);
   
   const handleFilePress = (id) => {
     navigation.navigate('SingleInvoice', { id: id})
   }
   
-  useEffect(async () => {
+  useEffect( () => {
+    async function fetchData() {
+      setFileData([]);
     const userid =  await AsyncStorage.getItem('user_id');
     console.log("Home Screen Loading", userid);
     // fetch(API_ROOT + `/api/file?userid=${userid}`, { headers: getHeaders()})
@@ -48,7 +50,9 @@ const HomeScreen = ({ navigation }) => {
         setFileData(sortedData);
       })
       .catch(error => console.error(error));
-  }, []);
+    }
+    fetchData();
+  }, [route]);
   
 
   const renderFileItem = ({ item }) => {

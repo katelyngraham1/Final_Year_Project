@@ -1,4 +1,6 @@
 import React, {useState, useEffect} from 'react';
+
+
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View, Switch } from "react-native";
 import Loader from './Components/Loader';
@@ -13,6 +15,7 @@ import { Alert } from 'react-native';
 export default function SingleInvoice({route, navigation}) {
   const [file, setFile] = useState();
   const [isEnabled, setIsEnabled] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(async () => {
     // const userid =  await AsyncStorage.getItem('user_id');
@@ -28,8 +31,33 @@ export default function SingleInvoice({route, navigation}) {
       .catch(error => console.error(error));
   }, [route.params.id]);
 
-  const deleteInvoice = () => {
-    // Logic to delete the invoice goes here
+  const handleDelete = () => {
+    Alert.alert(
+      'Delete Invoice',
+      'Are you sure you want to delete this invoice?',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Delete',
+          onPress: async () => {
+            setLoading(true);
+            fetch(API_ROOT + `/api/file/${route.params.id}`, {
+              method: 'DELETE',
+              headers: await getHeaders(),
+            })
+              .then(response => {
+                setLoading(false);
+                // navigation.goBack();
+                navigation.navigate('HomeScreen', { reload: true})
+              })
+              .catch(error => console.error(error));
+          },
+        },
+      ],
+    );
   }
   
 
@@ -120,25 +148,7 @@ export default function SingleInvoice({route, navigation}) {
         }
         <Button style={styles.newButton}  mode="contained"
       onPress={() => {
-        Alert.alert(
-          'Change Password',
-          'Are you sure you want to delete?',
-          [
-            {
-              text: 'No',
-              onPress: () => {
-                return null;
-              },
-            },
-            {
-              text: 'Yes',
-              onPress: () => {
-                handleDelete()
-              },
-            },
-          ],
-          {cancelable: false},
-        );
+        handleDelete();
       }}
       >Delete </Button>
     </View>
