@@ -6,6 +6,7 @@ import { API_ROOT, getHeaders } from '../constants';
 import { ScrollView } from 'react-native-gesture-handler';
 //import ToggleSwitch from 'toggle-switch-react-native'
 import Moment from 'moment';
+import { Button } from 'react-native-paper';
 import { Alert } from 'react-native';
 
 
@@ -22,10 +23,15 @@ export default function SingleInvoice({route, navigation}) {
       .then(data => {
         console.log(data);
         setFile(data);
-        setIsPaid(data.paid);
+        setIsEnabled(data.paid);
       })
       .catch(error => console.error(error));
   }, [route.params.id]);
+
+  const deleteInvoice = () => {
+    // Logic to delete the invoice goes here
+  }
+  
 
   const handleToggle = () => {
     Alert.alert(
@@ -112,6 +118,29 @@ export default function SingleInvoice({route, navigation}) {
         {isEnabled === true && 
           <Text style={styles.paidText}>Paid</Text>
         }
+        <Button style={styles.newButton}  mode="contained"
+      onPress={() => {
+        Alert.alert(
+          'Change Password',
+          'Are you sure you want to delete?',
+          [
+            {
+              text: 'No',
+              onPress: () => {
+                return null;
+              },
+            },
+            {
+              text: 'Yes',
+              onPress: () => {
+                handleDelete()
+              },
+            },
+          ],
+          {cancelable: false},
+        );
+      }}
+      >Delete </Button>
     </View>
   );
 };
@@ -158,6 +187,14 @@ const styles = StyleSheet.create({
         width: 0,
         height: 3
       }
+    },
+    newButton: {
+      backgroundColor: "#ff0000",
+      borderRadius: 20,
+      marginTop: 100,
+      padding: 5,
+      alignItems: "center",
+      margin: 5
     },
     dateContainer: {
       // backgroundColor: '#ebd5f6',
