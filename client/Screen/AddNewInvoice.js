@@ -6,14 +6,17 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Moment from 'moment';
 import { Button } from 'react-native-paper';
 import { API_ROOT, getHeaders } from '../constants';
-import DatePicker from 'react-native-datepicker';
+// import DatePicker from 'react-native-date-picker';
+import DateTimePicker from '@react-native-community/datetimepicker';
+
 import { Alert } from 'react-native';
 
 const HomeScreen = ({ navigation }) => {
   const [amount, setAmount] = useState('');
   const [paidStatus, setPaidStatus] = useState('');
   const [company, setCompany] = useState('');
-  const [date, setDate] = useState('');
+  const [date, setDate] = useState(new Date());
+  const [open, setOpen] = useState(false);
   const [isEnabled, setIsEnabled] = useState(false);
 
   const handleAmountInput = (text) => {
@@ -62,6 +65,14 @@ const HomeScreen = ({ navigation }) => {
     )
   }
 
+  const setDueDate = (event, d1) => {
+    const {
+      type,
+      nativeEvent: {timestamp},
+    } = event;
+    set
+  };
+
   return (
     <View style={styles.container}>
       <Text style={{ fontSize: 50, fontWeight: 'bold', marginTop: 25, marginBottom: 25, textAlign: 'center', color: '#ff4613'}}>File A While</Text>
@@ -80,42 +91,13 @@ const HomeScreen = ({ navigation }) => {
         onChangeText={setCompany}
       />
       <View style={{margin: 50}}>
-      <Text style={styles.text}> Due Date :</Text>
-          <DatePicker
-          style={styles.datePickerStyle}
-          date={date}
-          mode="date"
-          placeholder="select date"
-          format="DD/MM/YYYY"
-          minDate="01-01-1900"
-          maxDate="01-01-2000"
-          confirmBtnText="Confirm"
-          cancelBtnText="Cancel"
-          customStyles={{
-            dateIcon: {
-              position: 'absolute',
-              right: -5,
-              top: 4,
-              marginLeft: 0,
-            },
-            dateInput: {
-              borderColor : "gray",
-              alignItems: "flex-start",
-              borderWidth: 0,
-              borderBottomWidth: 1,
-            },
-            placeholderText: {
-              fontSize: 17,
-              color: "gray"
-            },
-            dateText: {
-              fontSize: 17,
-            }
-          }}
-          onDateChange={(date) => {
-            setDate(date);
-          }}
-        />
+      <Text style={styles.text}> {`Tap To Select Due date:`}</Text>
+
+      <DateTimePicker themeVariant="light" mode="date" value={date} 
+                      onChange={(e,d) => setDate(d)}/>
+
+
+      
         </View>
         <View style={{marginBottom: 50}}>
         {isEnabled === false &&  
