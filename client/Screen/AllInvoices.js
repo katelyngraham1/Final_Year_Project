@@ -75,7 +75,7 @@ const HomeScreen = ({ navigation }) => {
       />
       </ScrollView>
       <Button style={styles.newButton}  mode="contained" 
-              onPress={() => navigation.navigate('NewInvoice')}>
+              onPress={() => navigation.navigate('AddNewInvoice')}>
         Add New Invoice
       </Button>
     </View>

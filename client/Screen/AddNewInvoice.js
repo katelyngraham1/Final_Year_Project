@@ -1,79 +1,145 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { View, Text, FlatList, TouchableOpacity,
-         StyleSheet, ScrollView } from 'react-native';
+         StyleSheet, ScrollView, TextInput, Switch} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Moment from 'moment';
 import { Button } from 'react-native-paper';
 import { API_ROOT, getHeaders } from '../constants';
+import DatePicker from 'react-native-datepicker';
+import { Alert } from 'react-native';
 
 const HomeScreen = ({ navigation }) => {
-  const [fileData, setFileData] = useState([]);
-  
-  const handleFilePress = (id) => {
-    navigation.navigate('SingleInvoice', { id: id})
-  }
-  
-  useEffect(async () => {
-    const userid =  await AsyncStorage.getItem('user_id');
-    console.log("Home Screen Loading", userid);
-    // fetch(API_ROOT + `/api/file?userid=${userid}`, { headers: getHeaders()})
-    fetch(API_ROOT + `/api/file`, { headers: await getHeaders()})
-      .then(response => response.json())
-      .then(data => {
-        let sortedData = data
-          .sort((a, b) => {
-            const dueDateA = new Date(a.duedate);
-            const dueDateB = new Date(b.duedate);
-  
-            if (dueDateA < dueDateB) {
-              return -1;
-            } else if (dueDateA > dueDateB) {
-              return 1;
-            } else {
-              if (a.amount < b.amount) {
-                return -1;
-              } else if (a.amount > b.amount) {
-                return 1;
-              } else {
-                return 0;
-              }
-            }
-          });
-        sortedData = sortedData.map(r => {
-          r.duedate =  Moment(r.duedate).format('Do MMM');
-          return r;
-        });
-        setFileData(sortedData);
-      })
-      .catch(error => console.error(error));
-  }, []);
-  
+  const [amount, setAmount] = useState('');
+  const [paidStatus, setPaidStatus] = useState('');
+  const [company, setCompany] = useState('');
+  const [date, setDate] = useState('');
+  const [isEnabled, setIsEnabled] = useState(false);
 
-  const renderFileItem = ({ item }) => {
-    return (
-      <TouchableOpacity style={{ padding: 10}} onPress={() => handleFilePress(item.id)}>
-        <View elevation={5} style={styles.buttonContainer}>
-          <Text style={{ color: 'white' }}>{item.duedate}</Text>
-          <Text style={{ color: 'white' }}>{item.name}</Text>
-          <Text style={{ color: 'white' }}>€ {item.amount.toFixed(2)}</Text>
-          
-        </View>
-      </TouchableOpacity>
-    );
+  const handleAmountInput = (text) => {
+    // Regex pattern to only allow numbers and two decimal places
+    const regex = /^(\d+(\.\d{0,2})?)?$/;
+    if (regex.test(text)) {
+      setAmount(text);
+    }
   };
 
+  const handleToggle = () => {
+    Alert.alert(
+      'Confirm',
+      'Are you sure this is Paid?',
+      [
+        {
+          text: 'No',
+          onPress: () => setIsEnabled(false),
+          style: 'cancel'
+        },
+        {
+          text: 'Yes, it is Paid',
+          onPress: () => setIsEnabled(true),
+          style: 'paid'
+        }
+      ]
+    )
+  }
+
+  const handleUnpaidToggle = () => {
+    Alert.alert(
+      'Confirm',
+      'Item will now be unpaid?',
+      [
+        {
+          text: 'No',
+          onPress: () => setIsEnabled(true),
+          style: 'cancel'
+        },
+        {
+          text: 'Yes',
+          onPress: () => setIsEnabled(false),
+          style: 'unpaid'
+        }
+      ]
+    )
+  }
+
   return (
-    <View style={{margin: 30 }}>
-      <Text style={{ fontSize: 50, fontWeight: 'bold', marginTop: 15, marginBottom: 25, textAlign: 'center', color: '#ff4613'}}>File A While</Text>
-      <Text style={{ fontSize: 20, fontWeight: 'bold',  marginBottom: 25, textAlign: 'center' }}>All Invoices</Text>
-      <ScrollView contentContainerStyle={styles.scrollViewContent}>
-      <FlatList
-        data={fileData}
-        renderItem={renderFileItem}
-        keyExtractor={(item) => item.id}
+    <View style={styles.container}>
+      <Text style={{ fontSize: 50, fontWeight: 'bold', marginTop: 25, marginBottom: 25, textAlign: 'center', color: '#ff4613'}}>File A While</Text>
+      <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 50, textAlign: 'center' }}>Add New Invoice</Text>
+      <TextInput
+        style={styles.input}
+        keyboardType='numeric'
+        placeholder='Amount'
+        value={amount}
+        onChangeText={(text) => handleAmountInput(text)}
       />
-      </ScrollView>
+      <TextInput
+        style={styles.input}
+        placeholder="Company Name"
+        value={company}
+        onChangeText={setCompany}
+      />
+      <View style={{margin: 50}}>
+      <Text style={styles.text}> Due Date :</Text>
+          <DatePicker
+          style={styles.datePickerStyle}
+          date={date}
+          mode="date"
+          placeholder="select date"
+          format="DD/MM/YYYY"
+          minDate="01-01-1900"
+          maxDate="01-01-2000"
+          confirmBtnText="Confirm"
+          cancelBtnText="Cancel"
+          customStyles={{
+            dateIcon: {
+              position: 'absolute',
+              right: -5,
+              top: 4,
+              marginLeft: 0,
+            },
+            dateInput: {
+              borderColor : "gray",
+              alignItems: "flex-start",
+              borderWidth: 0,
+              borderBottomWidth: 1,
+            },
+            placeholderText: {
+              fontSize: 17,
+              color: "gray"
+            },
+            dateText: {
+              fontSize: 17,
+            }
+          }}
+          onDateChange={(date) => {
+            setDate(date);
+          }}
+        />
+        </View>
+        <View style={{marginBottom: 50}}>
+        {isEnabled === false &&  
+          <View style={styles.toggleContainer}>
+            <Text>Unpaid</Text>
+          <Switch
+            trackColor={{false: '#ff0000', true: '#68C151'}}
+            thumbColor={isEnabled ? '#f4f3f4' : '#f4f3f4'}
+            ios_backgroundColor="#ff0000"
+            onValueChange={handleToggle}
+            value={isEnabled}
+          />
+        </View> 
+        }
+        {isEnabled === true &&
+          <View style={styles.toggleContainer}>
+            <Text>Paid</Text>
+          <Switch
+            onValueChange={handleUnpaidToggle}
+            value={isEnabled}
+          />
+        </View> 
+        }
+        </View>
       <Button style={styles.newButton}  mode="contained" 
               onPress={() => navigation.navigate('NewInvoice')}>
         Add New Invoice
@@ -117,7 +183,17 @@ const styles = StyleSheet.create({
     padding: 5,
     alignItems: "center",
     margin: 5
-  }
+  },
+  input: {
+    height: 40,
+    width: '60%',
+    margin: 12,
+    borderWidth: 1,
+    padding: 10,
+    borderRadius: 10,
+    borderColor: '#f45225',
+    borderWidth: 3,
+  },
 });
 
 export default HomeScreen;

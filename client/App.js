@@ -95,7 +95,18 @@ const App = () => {
               fontWeight: 'bold',
             },}}
         />
-        
+        <Stack.Screen
+          name="AddNewInvoice"
+          component={AddNewInvoice}
+          options={{headerShown: true,
+            headerStyle: {
+              backgroundColor: '#c381e4', 
+            },
+            headerTintColor: '#fff', 
+            headerTitleStyle: {
+              fontWeight: 'bold',
+            },}}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
