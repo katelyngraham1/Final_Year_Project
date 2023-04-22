@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useNavigation } from "@react-navigation/native";
 import {
   View,
   Text,
@@ -21,7 +20,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { Alert } from "react-native";
 // import { response } from "express";
 
-const AddInvoiceScreen = () => {
+const AddInvoiceScreen = (props) => {
   const [amount, setAmount] = useState("");
   // const [paidStatus, setPaidStatus] = useState(false);
   const [company, setCompany] = useState("");
@@ -293,7 +292,31 @@ const AddInvoiceScreen = () => {
       marginRight: 35,
       marginTop: 20,
       marginBottom: 25
-    }
+    },
+    successTextStyle: {
+      color: '#99008b',
+      textAlign: 'center',
+      fontSize: 18,
+      padding: 30,
+    },
+    buttonStyle: {
+      backgroundColor: '#ff4613',
+      borderWidth: 0,
+      color: '#ff4613',
+      borderColor: '#ff4613',
+      height: 40,
+      alignItems: 'center',
+      borderRadius: 30,
+      marginLeft: 35,
+      marginRight: 35,
+      marginTop: 20,
+      marginBottom: 20,
+    },
+    buttonTextStyle: {
+      color: '#FFFFFF',
+      paddingVertical: 10,
+      fontSize: 16,
+    },
   });
 
 export default AddInvoiceScreen;
