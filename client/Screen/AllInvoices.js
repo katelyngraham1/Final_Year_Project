@@ -1,23 +1,28 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigation } from '@react-navigation/native';
+import React, { useState, useEffect } from "react";
 import { View, Text, FlatList, TouchableOpacity,
-         StyleSheet, ScrollView } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import Moment from 'moment';
-import { Button } from 'react-native-paper';
-import { API_ROOT, getHeaders } from '../constants';
+         StyleSheet, ScrollView } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import Moment from "moment";
+import { Button } from "react-native-paper";
+import { API_ROOT, getHeaders } from "../constants";
 
-const HomeScreen = ({ navigation }) => {
+/****************************************************/
+// Created: Katelyn Graham
+//
+// This file contains the logic for displaying all
+// invoices stored within the application.
+/****************************************************/
+
+const AllInvoices = ({ navigation }) => {
   const [fileData, setFileData] = useState([]);
-  
-  const handleFilePress = (id) => {
-    navigation.navigate('SingleInvoice', { id: id})
+
+  const handleFilePress = id => {
+    navigation.navigate("SingleInvoice", { id: id });
   }
-  
+
   useEffect(async () => {
     const userid =  await AsyncStorage.getItem('user_id');
     console.log("Home Screen Loading", userid);
-    // fetch(API_ROOT + `/api/file?userid=${userid}`, { headers: getHeaders()})
     fetch(API_ROOT + `/api/file`, { headers: await getHeaders()})
       .then(response => response.json())
       .then(data => {
@@ -25,30 +30,29 @@ const HomeScreen = ({ navigation }) => {
           .sort((a, b) => {
             const dueDateA = new Date(a.duedate);
             const dueDateB = new Date(b.duedate);
-  
-            if (dueDateA < dueDateB) {
+
+          if (dueDateA < dueDateB) {
+            return -1;
+          } else if (dueDateA > dueDateB) {
+            return 1;
+          } else {
+            if (a.amount < b.amount) {
               return -1;
-            } else if (dueDateA > dueDateB) {
+            } else if (a.amount > b.amount) {
               return 1;
             } else {
-              if (a.amount < b.amount) {
-                return -1;
-              } else if (a.amount > b.amount) {
-                return 1;
-              } else {
-                return 0;
-              }
+              return 0;
             }
-          });
+          }
+        });
         sortedData = sortedData.map(r => {
-          r.duedate =  Moment(r.duedate).format('Do MMM');
+          r.duedate = Moment(r.duedate).format("Do MMM");
           return r;
         });
         setFileData(sortedData);
       })
       .catch(error => console.error(error));
   }, []);
-  
 
   const renderFileItem = ({ item }) => {
     return (
@@ -57,7 +61,6 @@ const HomeScreen = ({ navigation }) => {
           <Text style={{ color: 'white' }}>{item.duedate}</Text>
           <Text style={{ color: 'white' }}>{item.name}</Text>
           <Text style={{ color: 'white' }}>€ {item.amount.toFixed(2)}</Text>
-          
         </View>
       </TouchableOpacity>
     );
@@ -85,27 +88,27 @@ const HomeScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#FFFFFF'
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#FFFFFF"
   },
   textStyle: {
-    color: '#FFFFFF'
+    color: "#FFFFFF"
   },
   buttonContainer: {
-    backgroundColor: '#f45225',
+    backgroundColor: "#f45225",
     borderRadius: 10,
     padding: 10,
-    shadowColor: '#000000',
+    shadowColor: "#000000",
     shadowOffset: {
       width: 0,
       height: 3
     },
     shadowRadius: 5,
     shadowOpacity: 1.0,
-    flexDirection: 'row', 
-    justifyContent: 'space-between', 
-    alignItems: 'center'
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center"
   },
   scrollViewContent: {
     maxHeight: 500,
@@ -120,4 +123,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default HomeScreen;
+export default AllInvoices;

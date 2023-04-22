@@ -6,12 +6,20 @@ import {
   Text,
   Image,
   KeyboardAvoidingView,
-  Keyboard,
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
-
+import { API_ROOT } from '../constants';
 import Loader from './Components/Loader';
+
+/****************************************************/
+// Created: Katelyn Graham
+//
+// This functional component contains the display and
+// associated logic for someone wishing to register 
+// themselves to be able to use the File A While
+// Application.
+/****************************************************/
 
 const RegisterScreen = (props) => {
   const [userName, setUserName] = useState('');
@@ -19,10 +27,7 @@ const RegisterScreen = (props) => {
   const [userPassword, setUserPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [errortext, setErrortext] = useState('');
-  const [
-    isRegistraionSuccess,
-    setIsRegistraionSuccess
-  ] = useState(false);
+  const [isRegistraionSuccess, setIsRegistraionSuccess] = useState(false);
 
   const emailInputRef = createRef();
   const passwordInputRef = createRef();

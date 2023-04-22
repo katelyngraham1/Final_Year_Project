@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   ActivityIndicator,
   View,
@@ -6,11 +6,19 @@ import {
   Image,
   Text,
 } from 'react-native';
-
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { color } from 'react-native-reanimated';
 
-const SplashScreen = ({navigation}) => {
+
+/****************************************************/
+// Created: Katelyn Graham
+//
+// This class implements the application splash screen
+// displayed on startup. If the user is logged in then
+// it redirects them to their home screen, otherwise 
+// they will be prompted to login or register
+/****************************************************/
+
+const SplashScreen = ({ navigation }) => {
   //State for ActivityIndicator animation
   const [animating, setAnimating] = useState(true);
 
@@ -30,10 +38,10 @@ const SplashScreen = ({navigation}) => {
 
   return (
     <View style={styles.container}>
-        <Text style={styles.textTitle}>FILE A WHILE</Text>
+      <Text style={styles.textTitle}>FILE A WHILE</Text>
       <Image
         source={require('../Image/FileLogo.png')}
-        style={{width: '90%', resizeMode: 'contain', margin: 30,}}
+        style={{ width: '90%', resizeMode: 'contain', margin: 30, }}
       />
       <ActivityIndicator
         animating={animating}
@@ -41,8 +49,8 @@ const SplashScreen = ({navigation}) => {
         size="large"
         style={styles.activityIndicator}
       />
-      <Text style={{marginTop: 20}}>Created by Katelyn Graham</Text>
-      <Text style={{marginTop: 10}}>version 1.1</Text>
+      <Text style={{ marginTop: 20 }}>Created by Katelyn Graham</Text>
+      <Text style={{ marginTop: 10 }}>version 1.1</Text>
     </View>
   );
 };

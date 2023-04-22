@@ -33,7 +33,10 @@ export default function Settings() {
       setMessage("New password and confirm password do not match!");
       return;
     }
-    let dataToSend = {newpassword: confirmPassword, currentpassword: currentPassword};
+    let dataToSend = {
+      newpassword: confirmPassword,
+      currentpassword: currentPassword
+    };
     let formBody = [];
     for (let key in dataToSend) {
       let encodedKey = encodeURIComponent(key);
@@ -52,7 +55,6 @@ export default function Settings() {
         console.log("Change password returned with", data);
         if (!data.error) {
           setMessage("Password change successful");
-          
         } else {
           setMessage(data.message);
         }
@@ -84,7 +86,9 @@ export default function Settings() {
         value={confirmPassword}
         onChangeText={text => setConfirmPassword(text)}
       />
-      <Button title="Save" style={styles.buttonStyle}
+      <Button
+        title="Save"
+        style={styles.buttonStyle}
         color="#ff4613"
         onPress={() => {
           Alert.alert(
@@ -108,7 +112,14 @@ export default function Settings() {
           );
         }}
       />
-      <Text style={[styles.message, message === "Password change successful" ? styles.successMessage : null]}>
+      <Text
+        style={[
+          styles.message,
+          message === "Password change successful"
+            ? styles.successMessage
+            : null
+        ]}
+      >
         {message}
       </Text>
     </View>

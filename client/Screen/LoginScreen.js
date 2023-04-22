@@ -1,4 +1,4 @@
-import React, {useState, createRef} from 'react';
+import React, { useState, createRef } from "react";
 import {
   StyleSheet,
   TextInput,
@@ -8,68 +8,74 @@ import {
   Image,
   Keyboard,
   TouchableOpacity,
-  KeyboardAvoidingView,
-} from 'react-native';
-import { API_ROOT } from '../constants';
+  KeyboardAvoidingView
+} from "react-native";
+import { API_ROOT } from "../constants";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import Loader from "./Components/Loader";
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
+/****************************************************/
+// Created: Katelyn Graham
+//
+// This functional component contains the display and
+// associated logic for someone wishing to log 
+// themselves into the File A While Application.
+/****************************************************/
 
-import Loader from './Components/Loader';
-
-const LoginScreen = ({navigation}) => {
-  const [userEmail, setUserEmail] = useState('');
-  const [userPassword, setUserPassword] = useState('');
+const LoginScreen = ({ navigation }) => {
+  const [userEmail, setUserEmail] = useState("");
+  const [userPassword, setUserPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [errortext, setErrortext] = useState('');
+  const [errortext, setErrortext] = useState("");
 
   const passwordInputRef = createRef();
 
   const handleSubmitPress = () => {
-    setErrortext('');
+    setErrortext("");
     if (!userEmail) {
-      alert('Please fill Email');
+      alert("Please fill Email");
       return;
     }
     if (!userPassword) {
-      alert('Please fill Password');
+      alert("Please fill Password");
       return;
     }
     setLoading(true);
-    let dataToSend = {email: userEmail, password: userPassword};
+    let dataToSend = { email: userEmail, password: userPassword };
     let formBody = [];
     for (let key in dataToSend) {
       let encodedKey = encodeURIComponent(key);
       let encodedValue = encodeURIComponent(dataToSend[key]);
-      formBody.push(encodedKey + '=' + encodedValue);
+      formBody.push(encodedKey + "=" + encodedValue);
     }
-    formBody = formBody.join('&');
+    formBody = formBody.join("&");
 
-    fetch(API_ROOT + '/api/user/login', {
-      method: 'POST',
+    fetch(API_ROOT + "/api/user/login", {
+      method: "POST",
       body: formBody,
       headers: {
         //Header Defination
         'Content-Type':
-        'application/x-www-form-urlencoded;charset=UTF-8',
+          'application/x-www-form-urlencoded;charset=UTF-8',
       },
     })
-      .then((response) => response.json())
-      .then((responseJson) => {
+      .then(response => response.json())
+      .then(responseJson => {
         //Hide Loader
         setLoading(false);
         console.log(responseJson);
 
         // If server response message same as Data Matched
         if (!responseJson.error) {
-          AsyncStorage.setItem('user_id', ""+ responseJson.data.id);
+          AsyncStorage.setItem("user_id", "" + responseJson.data.id);
           console.log(responseJson.data.id);
-          navigation.replace('DrawerNavigationRoutes');
+          navigation.replace("DrawerNavigationRoutes");
         } else {
           setErrortext(responseJson.message);
-          console.log('Please check your email id or password');
+          console.log("Please check your email id or password");
         }
       })
-      .catch((error) => {
+      .catch(error => {
         //Hide Loader
         setLoading(false);
         console.error(error);
@@ -88,7 +94,7 @@ const LoginScreen = ({navigation}) => {
         }}>
         <View>
           <KeyboardAvoidingView enabled>
-            <View style={{alignItems: 'center'}}>
+            <View style={{ alignItems: 'center' }}>
               <Image
                 source={require('../Image/FileLogo.png')}
                 style={{
@@ -162,56 +168,56 @@ export default LoginScreen;
 const styles = StyleSheet.create({
   mainBody: {
     flex: 1,
-    justifyContent: 'center',
-    backgroundColor: '#ebd5f6',
-    alignContent: 'center',
+    justifyContent: "center",
+    backgroundColor: "#ebd5f6",
+    alignContent: "center"
   },
   SectionStyle: {
-    flexDirection: 'row',
+    flexDirection: "row",
     height: 40,
     marginTop: 20,
     marginLeft: 35,
     marginRight: 35,
-    margin: 10,
+    margin: 10
   },
   buttonStyle: {
-    backgroundColor: '#ff4613',
+    backgroundColor: "#ff4613",
     borderWidth: 0,
-    color: '#ff4613',
-    borderColor: '#ff4613',
+    color: "#ff4613",
+    borderColor: "#ff4613",
     height: 40,
-    alignItems: 'center',
+    alignItems: "center",
     borderRadius: 30,
     marginLeft: 35,
     marginRight: 35,
     marginTop: 20,
-    marginBottom: 25,
+    marginBottom: 25
   },
   buttonTextStyle: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     paddingVertical: 10,
-    fontSize: 16,
+    fontSize: 16
   },
   inputStyle: {
     flex: 1,
-    color: '#99008b',
+    color: "#99008b",
     paddingLeft: 15,
     paddingRight: 15,
     borderWidth: 1,
     borderRadius: 30,
-    borderColor: '#99008b',
+    borderColor: "#99008b"
   },
   registerTextStyle: {
-    color: 'black',
-    textAlign: 'center',
-    fontWeight: 'bold',
+    color: "black",
+    textAlign: "center",
+    fontWeight: "bold",
     fontSize: 14,
-    alignSelf: 'center',
-    padding: 10,
+    alignSelf: "center",
+    padding: 10
   },
   errorTextStyle: {
-    color: 'red',
-    textAlign: 'center',
-    fontSize: 14,
-  },
+    color: "red",
+    textAlign: "center",
+    fontSize: 14
+  }
 });
