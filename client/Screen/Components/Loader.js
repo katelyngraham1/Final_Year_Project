@@ -1,6 +1,13 @@
 import React from 'react';
 import {StyleSheet, View, Modal, ActivityIndicator} from 'react-native';
 
+/****************************************************/
+// Created: Katelyn Graham
+//
+// This file contains a common loader display 
+// component used within the application.
+/****************************************************/
+
 const Loader = (props) => {
   const {loading, ...attributes} = props;
 

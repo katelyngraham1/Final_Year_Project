@@ -3,6 +3,13 @@ import { StyleSheet, Text, View, TextInput, Button, Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { API_ROOT, getHeaders } from "../../constants";
 
+/****************************************************/
+// Created: Katelyn Graham
+//
+// This file contains the logic for managing a users
+// settings within the application.
+/****************************************************/
+
 export default function Settings() {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -10,12 +17,13 @@ export default function Settings() {
   const [message, setMessage] = useState("");
 
   const handleChangePassword = async () => {
-    const userId = await AsyncStorage.getItem("user_id");
-    if (newPassword == "") { setMessage("No new password entered!"); 
-    return;
+    if (newPassword == "") {
+      setMessage("No new password entered!");
+      return;
     }
-    if (currentPassword == "") { setMessage("You did not enter the old password!"); 
-    return;
+    if (currentPassword == "") {
+      setMessage("You did not enter the old password!");
+      return;
     }
     if (newPassword.length < 6) {
       setMessage("New password must be at least 6 characters long!");
@@ -30,26 +38,26 @@ export default function Settings() {
     for (let key in dataToSend) {
       let encodedKey = encodeURIComponent(key);
       let encodedValue = encodeURIComponent(dataToSend[key]);
-      formBody.push(encodedKey + '=' + encodedValue);
+      formBody.push(encodedKey + "=" + encodedValue);
     }
-    formBody = formBody.join('&');
+    formBody = formBody.join("&");
     const headers = await getHeaders();
-    fetch(API_ROOT + '/api/user/changePassword', {
-      method: 'POST',
+    fetch(API_ROOT + "/api/user/changePassword", {
+      method: "POST",
       body: formBody,
       headers: headers
     })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("Change password returned with", data)
+      .then(response => response.json())
+      .then(data => {
+        console.log("Change password returned with", data);
         if (!data.error) {
           setMessage("Password change successful");
-
+          
         } else {
           setMessage(data.message);
         }
       })
-      .catch((error) => console.error(error));
+      .catch(error => console.error(error));
   };
 
   return (
@@ -60,50 +68,49 @@ export default function Settings() {
         secureTextEntry={true}
         placeholder="Current Password"
         value={currentPassword}
-        onChangeText={(text) => setCurrentPassword(text)}
-      /> 
+        onChangeText={text => setCurrentPassword(text)}
+      />
       <TextInput
-      style={styles.input}
-      secureTextEntry={true}
-      placeholder="New Password"
-      value={newPassword}
-      onChangeText={(text) => setNewPassword(text)}
-    />
+        style={styles.input}
+        secureTextEntry={true}
+        placeholder="New Password"
+        value={newPassword}
+        onChangeText={text => setNewPassword(text)}
+      />
       <TextInput
         style={styles.input}
         secureTextEntry={true}
         placeholder="Confirm New Password"
         value={confirmPassword}
-        onChangeText={(text) => setConfirmPassword(text)}
+        onChangeText={text => setConfirmPassword(text)}
       />
-      <Button title="Save"  style={styles.buttonStyle}
-      color="#ff4613"
-      onPress={() => {
-        Alert.alert(
-          'Change Password',
-          'Are you sure you want to change password?',
-          [
-            {
-              text: 'No',
-              onPress: () => {
-                return null;
+      <Button title="Save" style={styles.buttonStyle}
+        color="#ff4613"
+        onPress={() => {
+          Alert.alert(
+            "Change Password",
+            "Are you sure you want to change password?",
+            [
+              {
+                text: "No",
+                onPress: () => {
+                  return null;
+                }
               },
-            },
-            {
-              text: 'Yes',
-              onPress: () => {
-                handleChangePassword()
-              },
-            },
-          ],
-          {cancelable: false},
-        );
-      }}
-      
+              {
+                text: "Yes",
+                onPress: () => {
+                  handleChangePassword();
+                }
+              }
+            ],
+            { cancelable: false }
+          );
+        }}
       />
       <Text style={[styles.message, message === "Password change successful" ? styles.successMessage : null]}>
-  {message}
-</Text>   
+        {message}
+      </Text>
     </View>
   );
 }
@@ -113,12 +120,12 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "center"
   },
   header: {
     fontSize: 30,
     fontWeight: "bold",
-    marginBottom: 30,
+    marginBottom: 30
   },
   input: {
     borderWidth: 1,
@@ -126,27 +133,27 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 10,
     marginBottom: 20,
-    width: "80%",
+    width: "80%"
   },
   message: {
     marginTop: 20,
     fontWeight: "bold",
-    color: "red",
+    color: "red"
   },
   successMessage: {
-    color: "green",
+    color: "green"
   },
   buttonStyle: {
-    backgroundColor: '#ff4613',
+    backgroundColor: "#ff4613",
     borderWidth: 0,
-    color: '#ff4613',
-    borderColor: '#ff4613',
+    color: "#ff4613",
+    borderColor: "#ff4613",
     height: 40,
-    alignItems: 'center',
+    alignItems: "center",
     borderRadius: 30,
     marginLeft: 35,
     marginRight: 35,
     marginTop: 20,
-    marginBottom: 25,
-  },
+    marginBottom: 25
+  }
 });

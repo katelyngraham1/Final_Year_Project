@@ -1,11 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigation } from '@react-navigation/native';
 import { View, Text, FlatList, TouchableOpacity,
          StyleSheet, ScrollView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Moment from 'moment';
 import { Button } from 'react-native-paper';
 import { API_ROOT, getHeaders } from '../../constants';
+
+/****************************************************/
+// Created: Katelyn Graham
+//
+// This file contains the logic for the applications
+// home screen.
+/****************************************************/
 
 const HomeScreen = ({ navigation, route }) => {
   const [fileData, setFileData] = useState([]);

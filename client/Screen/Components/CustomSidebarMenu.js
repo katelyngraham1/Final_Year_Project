@@ -9,6 +9,14 @@ import {
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+/****************************************************/
+// Created: Katelyn Graham
+//
+// This file contains the logic for the applications
+// slide out side menu
+/****************************************************/
+
+
 const CustomSidebarMenu = (props) => {
   return (
     <View style={stylesSidebar.sideMenuContainer}>
