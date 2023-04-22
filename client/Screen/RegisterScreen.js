@@ -123,7 +123,7 @@ const RegisterScreen = (props) => {
           justifyContent: 'center',
           alignContent: 'center',
         }}>
-        <View style={{alignItems: 'center'}}>
+        <View style={{alignItems: 'center', marginTop: 100}}>
           <Image
             source={require('../Image/FileLogo.png')}
             style={{

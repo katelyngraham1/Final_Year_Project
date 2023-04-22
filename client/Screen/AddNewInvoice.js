@@ -1,23 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { View, Text, FlatList, TouchableOpacity,
-         StyleSheet, ScrollView, TextInput, Switch} from 'react-native';
+         StyleSheet, ScrollView, TextInput, Switch, Button} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Moment from 'moment';
-import { Button } from 'react-native-paper';
 import { API_ROOT, getHeaders } from '../constants';
 // import DatePicker from 'react-native-date-picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
-
+import Loader from './Components/Loader';
 import { Alert } from 'react-native';
+import { response } from 'express';
 
 const HomeScreen = ({ navigation }) => {
   const [amount, setAmount] = useState('');
-  const [paidStatus, setPaidStatus] = useState('');
+  const [paidStatus, setPaidStatus] = useState(false);
   const [company, setCompany] = useState('');
   const [date, setDate] = useState(new Date());
   const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [isEnabled, setIsEnabled] = useState(false);
+  const [errortext, setErrortext] = useState('');
+  const [isAddSuccess, setIsAddSuccess ] = useState(false);
 
   const handleAmountInput = (text) => {
     // Regex pattern to only allow numbers and two decimal places
@@ -64,6 +67,89 @@ const HomeScreen = ({ navigation }) => {
       ]
     )
   }
+
+  const handleAdd = async () => {
+      setErrortext('');
+      if (!amount) {
+        alert('Please fill in Amount');
+        return;
+      }
+      if(!company) {
+        alert('Please fill in the Company Name');
+        return;
+      }
+      setLoading(true);
+      var dataToSend = {
+      amount: amount,
+      name: company,
+      paid: paidStatus,
+      duedate : date,
+      };
+      var formBody = [];
+      for (var key in dataToSend) {
+        var encodedKey = encodeURIComponent(key);
+        var encodedValue = encodeURIComponent(dataToSend[key]);
+        formBody.push(encodedKey + '=' + encodedValue);
+      }
+
+
+      fetch(API_ROOT + '/api/file', {
+      method: 'POST',
+      body: formBody,
+      headers: {
+        //Header Defination
+        'Content-Type':
+        'application/x-www-form-urlencoded;charset=UTF-8',
+      },
+    })
+    .then((response) => response.json())
+    .then((responseJson) => {
+      //Hide Loader
+      setLoading(false);
+      console.log(responseJson);
+      if (!responseJson.error) {
+        setIsAddSuccess(true);
+        console.log(
+          'Adding Invoice Successful.'
+        );
+      } else {
+        setErrortext(responseJson.message);
+      }
+  })
+  .catch((error) => {
+    //Hide Loader
+    setLoading(false);
+    console.error(error);
+  });
+  if (isAddSuccess) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: '#ebd5f6',
+          justifyContent: 'center',
+        }}>
+        <Image
+          source={require('../Image/FileLogo.png')}
+          style={{
+            height: 150,
+            resizeMode: 'contain',
+            alignSelf: 'center'
+          }}
+        />
+        <Text style={styles.successTextStyle}>
+          Adding Invoice Successful
+        </Text>
+        <TouchableOpacity
+          style={styles.buttonStyle}
+          activeOpacity={0.5}
+          onPress={() => props.navigation.navigate('HomeScreen')}>
+          <Text style={styles.buttonTextStyle}>Home Screen</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+  
 
   const setDueDate = (event, d1) => {
     const {
@@ -122,10 +208,14 @@ const HomeScreen = ({ navigation }) => {
         </View> 
         }
         </View>
-      <Button style={styles.newButton}  mode="contained" 
-              onPress={() => navigation.navigate('NewInvoice')}>
-        Add New Invoice
-      </Button>
+      <Button title="Add New Invoice" style={styles.buttonStyle} 
+      color="#ff4613" onPress={handleAdd}/>
+
+    {errortext != '' ? (
+            <Text style={styles.errorTextStyle}>
+              {errortext}
+            </Text>
+          ) : null}
     </View>
   );
 };
@@ -176,6 +266,19 @@ const styles = StyleSheet.create({
     borderColor: '#f45225',
     borderWidth: 3,
   },
+  buttonStyle: {
+    backgroundColor: '#ff4613',
+    borderWidth: 0,
+    color: '#ff4613',
+    borderColor: '#ff4613',
+    height: 40,
+    alignItems: 'center',
+    borderRadius: 30,
+    marginLeft: 35,
+    marginRight: 35,
+    marginTop: 20,
+    marginBottom: 25,
+  },
 });
-
-export default HomeScreen;
+};
+ export default HomeScreen;
