@@ -141,7 +141,7 @@ const AddInvoiceScreen = (props) => {
           <TouchableOpacity
             style={styles.buttonStyle}
             activeOpacity={0.5}
-            onPress={() => props.navigation.navigate("HomeScreen")}
+            onPress={() => props.navigation.navigate('HomeScreen', { reload: true})}
           >
             <Text style={styles.buttonTextStyle}>Home Screen</Text>
           </TouchableOpacity>
