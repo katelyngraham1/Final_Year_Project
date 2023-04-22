@@ -1,6 +1,5 @@
 const db = require("../models");
 const folder = db.folder;
-const Op = db.Sequelize.Op;
 const utils = require("./utils");
 
 // Create and Save a new Folders

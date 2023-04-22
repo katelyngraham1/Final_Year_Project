@@ -1,6 +1,12 @@
+/****************************************************/
+// Created: Katelyn Graham
+//
+// This file is the entry point for the back end server
+// part of the File a While application.
+/****************************************************/
+
 const express = require("express");
 const cors = require("cors");
-
 const app = express();
 
 var corsOptions = {

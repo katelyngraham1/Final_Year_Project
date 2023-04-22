@@ -1,6 +1,5 @@
 const db = require("../models");
 const company = db.company;
-const Op = db.Sequelize.Op;
 const utils = require("./utils");
 
 // Create and Save a new Company

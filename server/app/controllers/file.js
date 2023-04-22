@@ -5,23 +5,16 @@ const utils = require("./utils");
 
 // Create and Save a new File
 exports.create = (req, res) => {
+  console.log("Create invoice", req.headers);
   // Validate request
   if (!req.body.name) {
     res.status(400).send(utils.error("Missing data in request!"));
     return;
   }
 
-  // Create a File
-  // const File = {
-  //   name: req.body.name,
-  //   paid: req.body.paid,
-  //   amount: req.body.amount,
-  //   filetype: req.body.filetype,
-  //   userid
-  // };
 
-  // Save File in the database
-  file.create(req.body)
+  // Create File in the database  
+  file.create({...req.body, userid: req.headers.userid })
     .then(data => {
       res.send(utils.success(data));
     })

@@ -1,24 +1,24 @@
 module.exports = (sequelize, DataTypes) => {
-    var company = sequelize.define("company", {
-      name: {
-        type: DataTypes.STRING
-      }      
-    });
+  var company = sequelize.define("company", {
+    name: {
+      type: DataTypes.STRING
+    }      
+  });
 
-    company.associate = function (models) {
-        company.belongsTo(
-          models.user,
+  company.associate = function (models) {
+      company.belongsTo(
+        models.user,
+        {
+            foreignKey: 'userid'
+        }
+      );
+      company.hasMany(
+          models.file,
           {
-              foreignKey: 'userid'
+              foreignKey: 'fileid'
           }
         );
-        company.hasMany(
-            models.file,
-            {
-                foreignKey: 'fileid'
-            }
-          );
-      };
-  
-    return company;
-  };
+    };
+
+  return company;
+};
