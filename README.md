@@ -68,5 +68,6 @@ npx expo start
 This will start the Expo development server and open the app in your default browser or you can scan the QR code and open it up on the Expo Go app on your phone.
 
 <br>
-#### Contributions
+
+### Contributions
 Contributions are welcome! If you find any bugs or want to suggest new features, please open an issue or contact me via email.
