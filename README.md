@@ -30,11 +30,13 @@ MySQL [https://www.mysql.com/](https://www.mysql.com/)<br>
 ```
 git clone https://github.com/katelyngraham1/Final_Year_Project
 ```
+<br>
 2. Install the dependencies for the backend
 ``` 
 cd Final_Year_Project/server
 npm install
 ```
+<br>
 3. If needed change the backend environment variables
 ```
 cd config/db.config.js
@@ -45,10 +47,16 @@ username: "your_mysql_username",
 password: "your_mysql_password",
 database: "file_a_while",
 ```
-4. Install the dependencies for the frontend:
+<br>
+4. Create the database:
+```
+CREATE DATABASE file_a_while;
+```
+<br>
+5. Install the dependencies for the frontend:
 ``` 
 cd Final_Year_Project/client
-npm install --force 
+npm install 
 ```
 
 ## Usage
@@ -60,12 +68,13 @@ nodemon .\server.js
 ```
 This will start the backend server at http://localhost:8080.
 
+<br>
 2. Start the frontend app
 ```
 cd Final_Year_Project/client
 npx expo start
 ```
-This will start the Expo development server and open the app in your default browser or you can scan the QR code and open it up on the Expo Go app on your phone.
+This will start the Expo development server. Scan the QR code and open it up on the Expo Go app on your phone.
 
 <br>
 
